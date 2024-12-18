@@ -6,6 +6,7 @@ import (
 	"github.com/chyiyaqing/gmicro-order/config"
 	"github.com/chyiyaqing/gmicro-order/internal/adapters/db"
 	"github.com/chyiyaqing/gmicro-order/internal/adapters/grpc"
+	"github.com/chyiyaqing/gmicro-order/internal/adapters/payment"
 	"github.com/chyiyaqing/gmicro-order/internal/application/core/api"
 	log "github.com/sirupsen/logrus"
 	"go.opentelemetry.io/otel/attribute"
@@ -79,7 +80,12 @@ func main() {
 		log.Fatalf("Failed to connect to database. Error: %v", err)
 	}
 
-	application := api.NewApplication(dbAdapter)
+	paymentAdapter, err := payment.NewAdapter(config.GetPaymentServiceUrl())
+	if err != nil {
+		log.Fatalf("Failed to initialize payment stub, Error: %v", err)
+	}
+
+	application := api.NewApplication(dbAdapter, paymentAdapter)
 	grpcAdapter := grpc.NewAdaptor(application, config.GetApplicationPort())
 	grpcAdapter.Run()
 }
