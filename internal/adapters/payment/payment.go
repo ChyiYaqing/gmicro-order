@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/chyiyaqing/gmicro-order/internal/adapters/cert"
 	"github.com/chyiyaqing/gmicro-order/internal/application/core/domain"
 	"github.com/chyiyaqing/gmicro-proto/golang/payment"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
@@ -18,9 +19,14 @@ type Adapter struct {
 }
 
 func NewAdapter(paymentServiceUrl string) (*Adapter, error) {
+	// tlsCredentials, tlsCredentialsErr := cert.GetTlsCredentials()
+	_, tlsCredentialsErr := cert.GetTlsCredentials()
+	if tlsCredentialsErr != nil {
+		return nil, tlsCredentialsErr
+	}
 	var opts []grpc.DialOption
 	opts = append(opts,
-		grpc.WithInsecure(),
+		// grpc.WithTransportCredentials(tlsCredentials),
 		grpc.WithUnaryInterceptor(
 			grpc_retry.UnaryClientInterceptor(
 				grpc_retry.WithCodes(codes.Unavailable, codes.ResourceExhausted),

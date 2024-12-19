@@ -77,7 +77,7 @@ func main() {
 
 	dbAdapter, err := db.NewAdapter(config.GetSqliteDB())
 	if err != nil {
-		log.Fatalf("Failed to connect to database. Error: %v", err)
+		log.Fatalf("Failed to connect to database. Error: %v", err.Error())
 	}
 
 	paymentAdapter, err := payment.NewAdapter(config.GetPaymentServiceUrl())

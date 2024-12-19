@@ -34,11 +34,10 @@ func (a *Adapter) Run() {
 	if err != nil {
 		log.Fatalf("failed to listen on port %d, error: %v", a.port, err)
 	}
-
+	var opts []grpc.ServerOption
+	opts = append(opts, grpc.StatsHandler(otelgrpc.NewServerHandler()))
 	// 2. 创建 gRPC 服务器，配置OpenTelemetry拦截器用于监控
-	grpcServer := grpc.NewServer(
-		grpc.StatsHandler(otelgrpc.NewServerHandler()),
-	)
+	grpcServer := grpc.NewServer(opts...)
 
 	// 3. 保存服务器实例
 	a.server = grpcServer
