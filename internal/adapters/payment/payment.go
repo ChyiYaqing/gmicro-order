@@ -20,11 +20,13 @@ type Adapter struct {
 func NewAdapter(paymentServiceUrl string) (*Adapter, error) {
 	var opts []grpc.DialOption
 	opts = append(opts,
-		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor( // 一元请求启用拦截器
-			grpc_retry.WithCodes(codes.Unavailable, codes.ResourceExhausted),
-			grpc_retry.WithMax(5),
-			grpc_retry.WithBackoff(grpc_retry.BackoffLinear(time.Second)),
-		)),
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(
+			grpc_retry.UnaryClientInterceptor(
+				grpc_retry.WithCodes(codes.Unavailable, codes.ResourceExhausted),
+				grpc_retry.WithMax(5),
+				grpc_retry.WithBackoff(grpc_retry.BackoffLinear(time.Second)),
+			)),
 		grpc.WithTransportCredentials(insecure.NewCredentials()), // 连接禁用TLS握手
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()))
 	conn, err := grpc.NewClient(paymentServiceUrl, opts...)
