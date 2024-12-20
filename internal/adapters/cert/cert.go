@@ -28,6 +28,6 @@ func GetTlsCredentials() (credentials.TransportCredentials, error) {
 		&tls.Config{
 			ClientAuth:   tls.RequireAnyClientCert,
 			Certificates: []tls.Certificate{clientCert},
-			ClientCAs:    certPool,
+			RootCAs:      certPool,
 		}), nil
 }

@@ -11,7 +11,6 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Adapter struct {
@@ -19,21 +18,19 @@ type Adapter struct {
 }
 
 func NewAdapter(paymentServiceUrl string) (*Adapter, error) {
-	// tlsCredentials, tlsCredentialsErr := cert.GetTlsCredentials()
-	_, tlsCredentialsErr := cert.GetTlsCredentials()
+	tlsCredentials, tlsCredentialsErr := cert.GetTlsCredentials()
 	if tlsCredentialsErr != nil {
 		return nil, tlsCredentialsErr
 	}
 	var opts []grpc.DialOption
 	opts = append(opts,
-		// grpc.WithTransportCredentials(tlsCredentials),
+		grpc.WithTransportCredentials(tlsCredentials),
 		grpc.WithUnaryInterceptor(
 			grpc_retry.UnaryClientInterceptor(
 				grpc_retry.WithCodes(codes.Unavailable, codes.ResourceExhausted),
 				grpc_retry.WithMax(5),
 				grpc_retry.WithBackoff(grpc_retry.BackoffLinear(time.Second)),
 			)),
-		grpc.WithTransportCredentials(insecure.NewCredentials()), // 连接禁用TLS握手
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()))
 	conn, err := grpc.NewClient(paymentServiceUrl, opts...)
 	if err != nil {

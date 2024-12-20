@@ -45,6 +45,8 @@
 }
 ```
 
+gRPC 双向TLS(mutual TLS/mTLS)认证
+
 OpenSSL 生成自签名证书
 
 ```bash
@@ -189,7 +191,7 @@ server-ext.cnf
 
 ```bash
 ➜ cat server-ext.cnf 
-subjectAltName=DNS:*.chyidl.com,DNS:*.chyidl.com,IP:0.0.0.0
+subjectAltName=DNS:*.chyidl.com,DNS:*.localhost,IP:0.0.0.0
 ```
 
 使用CA-CERT.pem签署请求
