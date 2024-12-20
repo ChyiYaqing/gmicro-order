@@ -210,3 +210,19 @@ subjectAltName=DNS:*.chyidl.com,DNS:*.localhost,IP:0.0.0.0
 Certificate request self-signature ok
 subject=C = CN, L = HANGZHOU, O = CHYIDL, OU = Software, CN = *.chyidl.com, emailAddress = chyiyaqing@gmail.com
 ```
+
+单元测试
+
+```bash
+➜ go test ./... -cover -coverprofile=coverage.out
+        github.com/chyiyaqing/gmicro-order/internal/adapters/payment            coverage: 0.0% of statements
+        github.com/chyiyaqing/gmicro-order/internal/adapters/db         coverage: 0.0% of statements
+        github.com/chyiyaqing/gmicro-order/internal/adapters/grpc               coverage: 0.0% of statements
+        github.com/chyiyaqing/gmicro-order/cmd          coverage: 0.0% of statements
+        github.com/chyiyaqing/gmicro-order/internal/adapters/cert               coverage: 0.0% of statements
+        github.com/chyiyaqing/gmicro-order/config               coverage: 0.0% of statements
+?       github.com/chyiyaqing/gmicro-order/internal/ports       [no test files]
+        github.com/chyiyaqing/gmicro-order/internal/middleware          coverage: 0.0% of statements
+        github.com/chyiyaqing/gmicro-order/internal/application/core/domain             coverage: 0.0% of statements
+ok      github.com/chyiyaqing/gmicro-order/internal/application/core/api        0.003s  coverage: 70.0% of statements
+```

@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"strings"
 
 	"github.com/chyiyaqing/gmicro-order/internal/application/core/domain"
 	"github.com/chyiyaqing/gmicro-order/internal/ports"
@@ -31,30 +30,10 @@ func (a *Application) SaveOrder(ctx context.Context, order domain.Order) (domain
 	}
 	paymentErr := a.payment.Charge(ctx, &order)
 	if paymentErr != nil {
-		// st, _ := status.FromError(paymentErr)
-		// fieldErr := &errdetails.BadRequest_FieldViolation{
-		// 	Field:       "payment",
-		// 	Description: st.Message(),
-		// }
-		// badReq := &errdetails.BadRequest{}
-		// badReq.FieldViolations = append(badReq.FieldViolations, fieldErr)
-		// orderStatus := status.New(codes.InvalidArgument, "order creation failed")
-		// statusWithDetail, _ := orderStatus.WithDetails(badReq)
-		// return domain.Order{}, statusWithDetail.Err()
-
-		st := status.Convert(paymentErr)
-		var allErrors []string
-		for _, detail := range st.Details() {
-			switch t := detail.(type) {
-			case *errdetails.BadRequest:
-				for _, violation := range t.GetFieldViolations() {
-					allErrors = append(allErrors, violation.Description)
-				}
-			}
-		}
+		st, _ := status.FromError(paymentErr)
 		fieldErr := &errdetails.BadRequest_FieldViolation{
 			Field:       "payment",
-			Description: strings.Join(allErrors, "\n"),
+			Description: st.Message(),
 		}
 		badReq := &errdetails.BadRequest{}
 		badReq.FieldViolations = append(badReq.FieldViolations, fieldErr)
