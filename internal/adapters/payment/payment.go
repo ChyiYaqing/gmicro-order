@@ -18,13 +18,14 @@ type Adapter struct {
 }
 
 func NewAdapter(paymentServiceUrl string) (*Adapter, error) {
-	tlsCredentials, tlsCredentialsErr := cert.GetTlsCredentials()
+	// tlsCredentials, tlsCredentialsErr := cert.GetTlsCredentials()
+	_, tlsCredentialsErr := cert.GetTlsCredentials()
 	if tlsCredentialsErr != nil {
 		return nil, tlsCredentialsErr
 	}
 	var opts []grpc.DialOption
 	opts = append(opts,
-		grpc.WithTransportCredentials(tlsCredentials),
+		// grpc.WithTransportCredentials(tlsCredentials),
 		grpc.WithUnaryInterceptor(
 			grpc_retry.UnaryClientInterceptor(
 				grpc_retry.WithCodes(codes.Unavailable, codes.ResourceExhausted),
