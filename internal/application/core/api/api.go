@@ -11,15 +11,19 @@ import (
 )
 
 type Application struct {
-	db      ports.DBPort
-	payment ports.PaymentPort
+	db       ports.DBPort
+	payment  ports.PaymentPort
+	user     ports.UserPort
+	shipping ports.ShippingPort
 }
 
 // 依赖注入机制：将数据库适配器(特定的数据库技术的具体实现)注入到应用程序中，以便API可以将特定订单的状态存储在数据库中
-func NewApplication(db ports.DBPort, payment ports.PaymentPort) *Application {
+func NewApplication(db ports.DBPort, payment ports.PaymentPort, user ports.UserPort, shipping ports.ShippingPort) *Application {
 	return &Application{
-		db:      db,
-		payment: payment,
+		db:       db,
+		payment:  payment,
+		user:     user,
+		shipping: shipping,
 	}
 }
 
@@ -28,6 +32,7 @@ func (a *Application) SaveOrder(ctx context.Context, order domain.Order) (domain
 	if err != nil {
 		return domain.Order{}, err
 	}
+	// paymentErr
 	paymentErr := a.payment.Charge(ctx, &order)
 	if paymentErr != nil {
 		st, _ := status.FromError(paymentErr)
@@ -41,6 +46,17 @@ func (a *Application) SaveOrder(ctx context.Context, order domain.Order) (domain
 		statusWithDetail, _ := orderStatus.WithDetails(badReq)
 		return domain.Order{}, statusWithDetail.Err()
 	}
+	// user
+	userModel, userErr := a.user.Get(ctx, order.CustomerID)
+	if userErr != nil {
+		return domain.Order{}, userErr
+	}
+	// shipping
+	shippingErr := a.shipping.Create(ctx, &order, userModel.Address)
+	if shippingErr != nil {
+		return domain.Order{}, shippingErr
+	}
+
 	return order, nil
 }
 

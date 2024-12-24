@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: GRPC # 说明gRPC后端
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: selfsigned-issuer # 配置证书
+  name: order
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ingress.local
+      http:
+        paths:
+          - path: /Order
+            pathType: Prefix
+            backend:
+              service:
+                name: order
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+      - ingress.local

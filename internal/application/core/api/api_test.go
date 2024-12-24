@@ -36,13 +36,35 @@ func (d *mockedDb) Get(ctx context.Context, id int64) (domain.Order, error) {
 	return args.Get(0).(domain.Order), args.Error(1)
 }
 
+type mockedUser struct {
+	mock.Mock
+}
+
+func (d *mockedUser) Get(ctx context.Context, id int64) (domain.User, error) {
+	args := d.Called(ctx, id)
+	return args.Get(0).(domain.User), args.Error(1)
+}
+
+type mockedShipping struct {
+	mock.Mock
+}
+
+func (d *mockedShipping) Create(ctx context.Context, order *domain.Order, address string) error {
+	args := d.Called(ctx, order, address)
+	return args.Error(0)
+}
+
 func TestSaveOrder(t *testing.T) {
 	payment := new(mockedPayment)
 	db := new(mockedDb)
+	shipping := new(mockedShipping)
+	user := new(mockedUser)
 	payment.On("Charge", mock.Anything, mock.Anything).Return(nil)
 	db.On("Save", mock.Anything, mock.Anything).Return(nil)
+	shipping.On("Create", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+	user.On("Get", mock.Anything, mock.Anything).Return(domain.User{ID: 123}, nil)
 
-	application := NewApplication(db, payment)
+	application := NewApplication(db, payment, user, shipping)
 	_, err := application.SaveOrder(context.Background(), domain.Order{
 		CustomerID: 123,
 		OrderItems: []domain.OrderItem{
@@ -60,10 +82,14 @@ func TestSaveOrder(t *testing.T) {
 func Test_Should_Return_Error_When_Db_Persistence_Fail(t *testing.T) {
 	payment := new(mockedPayment)
 	db := new(mockedDb)
+	shipping := new(mockedShipping)
+	user := new(mockedUser)
 	payment.On("Charge", mock.Anything, mock.Anything).Return(nil)
 	db.On("Save", mock.Anything, mock.Anything).Return(errors.New("connection error"))
+	shipping.On("Create", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+	user.On("Get", mock.Anything, mock.Anything).Return(domain.User{ID: 123}, nil)
 
-	application := NewApplication(db, payment)
+	application := NewApplication(db, payment, user, shipping)
 	_, err := application.SaveOrder(context.Background(), domain.Order{
 		CustomerID: 123,
 		OrderItems: []domain.OrderItem{
@@ -81,10 +107,14 @@ func Test_Should_Return_Error_When_Db_Persistence_Fail(t *testing.T) {
 func Test_Should_Return_Error_When_Payment_Fail(t *testing.T) {
 	payment := new(mockedPayment)
 	db := new(mockedDb)
+	shipping := new(mockedShipping)
+	user := new(mockedUser)
 	payment.On("Charge", mock.Anything, mock.Anything).Return(errors.New("insufficient balance"))
 	db.On("Save", mock.Anything, mock.Anything).Return(nil)
+	shipping.On("Create", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+	user.On("Get", mock.Anything, mock.Anything).Return(domain.User{ID: 123}, nil)
 
-	application := NewApplication(db, payment)
+	application := NewApplication(db, payment, user, shipping)
 	_, err := application.SaveOrder(context.Background(), domain.Order{
 		CustomerID: 123,
 		OrderItems: []domain.OrderItem{

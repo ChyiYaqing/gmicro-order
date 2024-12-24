@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order
+  labels:
+    app: order
+spec:
+  selector:
+    app: order
+  ports:
+    - name: grpc
+      port: 8080
+      # nodePort: # Optional field by default and for convenience, the Kubernetes control plane will allocate a port from a range
+      protocol: TCP
+      targetPort: 8080
+  type: NodePort

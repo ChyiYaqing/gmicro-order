@@ -1,11 +1,11 @@
-package payment
+package shipping
 
 import (
 	"context"
 	"time"
 
 	"github.com/chyiyaqing/gmicro-order/internal/application/core/domain"
-	"github.com/chyiyaqing/gmicro-proto/golang/payment"
+	"github.com/chyiyaqing/gmicro-proto/golang/shipping"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
@@ -14,18 +14,12 @@ import (
 )
 
 type Adapter struct {
-	payment payment.PaymentClient
+	shipping shipping.ShippingClient
 }
 
-func NewAdapter(paymentServiceUrl string) (*Adapter, error) {
-	// tlsCredentials, tlsCredentialsErr := cert.GetTlsCredentials()
-	// _, tlsCredentialsErr := cert.GetTlsCredentials()
-	// if tlsCredentialsErr != nil {
-	// 	return nil, tlsCredentialsErr
-	// }
+func NewAdapter(shippingServiceUrl string) (*Adapter, error) {
 	var opts []grpc.DialOption
 	opts = append(opts,
-		// grpc.WithTransportCredentials(tlsCredentials),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithUnaryInterceptor(
 			grpc_retry.UnaryClientInterceptor(
@@ -36,19 +30,19 @@ func NewAdapter(paymentServiceUrl string) (*Adapter, error) {
 		),
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
 	)
-	conn, err := grpc.NewClient(paymentServiceUrl, opts...)
+	conn, err := grpc.NewClient(shippingServiceUrl, opts...)
 	if err != nil {
 		return nil, err
 	}
-	client := payment.NewPaymentClient(conn)
-	return &Adapter{payment: client}, nil
+	client := shipping.NewShippingClient(conn)
+	return &Adapter{shipping: client}, nil
 }
 
-func (a *Adapter) Charge(ctx context.Context, order *domain.Order) error {
-	_, err := a.payment.Create(ctx, &payment.CreatePaymentRequest{
-		UserId:     order.CustomerID,
-		OrderId:    order.ID,
-		TotalPrice: order.TotalPrice(),
+func (a *Adapter) Create(ctx context.Context, order *domain.Order, address string) error {
+	_, err := a.shipping.Create(ctx, &shipping.CreateShippingRequest{
+		UserId:  order.CustomerID,
+		OrderId: order.ID,
+		Address: address,
 	})
 	return err
 }

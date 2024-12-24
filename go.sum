@@ -6,6 +6,10 @@ github.com/chyiyaqing/gmicro-proto/golang/order v0.0.6 h1:he58mJ8Z9n5bs2Y7A1oG4N
 github.com/chyiyaqing/gmicro-proto/golang/order v0.0.6/go.mod h1:TR9TQfFPfJRgvGdKXZCG6bvPPeCeCP8ZY92N3Lv2Kqw=
 github.com/chyiyaqing/gmicro-proto/golang/payment v0.0.6 h1:PqDyoRAmzYiqF2y61nyiioyOrsvU+gsgeTYxQNJETPE=
 github.com/chyiyaqing/gmicro-proto/golang/payment v0.0.6/go.mod h1:Gt3lhDll2BC/Qr4ahoNU04O6kX0aMlHbmM6J1J6IUpo=
+github.com/chyiyaqing/gmicro-proto/golang/shipping v0.0.12 h1:/t+72h4rTda1oqrGNoZ5Dqk1g6wvTVTLc3bWQbEUBqg=
+github.com/chyiyaqing/gmicro-proto/golang/shipping v0.0.12/go.mod h1:Cou0P2qDvLodv1sPr9DX3YA3E9krAP3qcgVEyTaLcX4=
+github.com/chyiyaqing/gmicro-proto/golang/user v0.0.12 h1:UpMmZSPb++OjVC44yV7K5lZxr5APqVNniCT7VOZDFsY=
+github.com/chyiyaqing/gmicro-proto/golang/user v0.0.12/go.mod h1:t7HuuLxHeGYXPcb/sAHoqyi9QWDx17Q1waOW5v1MGz4=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -164,10 +168,10 @@ google.golang.org/grpc v1.23.0/go.mod h1:Y5yQAOtifL1yxbo5wqy6BxZv8vAUGQwXBOALyac
 google.golang.org/grpc v1.25.1/go.mod h1:c3i+UQWmh7LiEpx4sFZnkU36qjEYZ0imhYfXVyQciAY=
 google.golang.org/grpc v1.27.0/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8abTk=
 google.golang.org/grpc v1.29.1/go.mod h1:itym6AZVZYACWQqET3MqgPpjcuV5QH3BxFS3IjizoKk=
-google.golang.org/grpc v1.69.0 h1:quSiOM1GJPmPH5XtU+BCoVXcDVJJAzNcoyfC2cCjGkI=
-google.golang.org/grpc v1.69.0/go.mod h1:vyjdE6jLBI76dgpDojsFGNaHlxdjXN9ghpnd2o7JGZ4=
-google.golang.org/protobuf v1.35.2 h1:8Ar7bF+apOIoThw1EdZl0p1oWvMqTHmpA2fRTyZO8io=
-google.golang.org/protobuf v1.35.2/go.mod h1:9fA7Ob0pmnwhb644+1+CVWFRbNajQ6iRojtC/QF5bRE=
+google.golang.org/grpc v1.69.2 h1:U3S9QEtbXC0bYNvRtcoklF3xGtLViumSYxWykJS+7AU=
+google.golang.org/grpc v1.69.2/go.mod h1:vyjdE6jLBI76dgpDojsFGNaHlxdjXN9ghpnd2o7JGZ4=
+google.golang.org/protobuf v1.36.1 h1:yBPeRvTftaleIgM3PZ/WBIZ7XM/eEYAaEyCwvyjq/gk=
+google.golang.org/protobuf v1.36.1/go.mod h1:9fA7Ob0pmnwhb644+1+CVWFRbNajQ6iRojtC/QF5bRE=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c h1:Hei/4ADfdWqJk1ZMxUNpqntNwaWcugrBjAiHlqqRiVk=

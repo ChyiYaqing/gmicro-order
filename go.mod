@@ -1,10 +1,12 @@
 module github.com/chyiyaqing/gmicro-order
 
-go 1.22.7
+go 1.22.10
 
 require (
 	github.com/chyiyaqing/gmicro-proto/golang/order v0.0.6
 	github.com/chyiyaqing/gmicro-proto/golang/payment v0.0.6
+	github.com/chyiyaqing/gmicro-proto/golang/shipping v0.0.12
+	github.com/chyiyaqing/gmicro-proto/golang/user v0.0.12
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/sony/gobreaker v1.0.0
@@ -16,7 +18,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.33.0
 	go.uber.org/mock v0.5.0
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241209162323-e6fa225c2576
-	google.golang.org/grpc v1.69.0
+	google.golang.org/grpc v1.69.2
 	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.25.12
 )
@@ -36,6 +38,6 @@ require (
 	golang.org/x/net v0.32.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
-	google.golang.org/protobuf v1.35.2 // indirect
+	google.golang.org/protobuf v1.36.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

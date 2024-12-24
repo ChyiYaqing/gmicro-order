@@ -226,3 +226,11 @@ subject=C = CN, L = HANGZHOU, O = CHYIDL, OU = Software, CN = *.chyidl.com, emai
         github.com/chyiyaqing/gmicro-order/internal/application/core/domain             coverage: 0.0% of statements
 ok      github.com/chyiyaqing/gmicro-order/internal/application/core/api        0.003s  coverage: 70.0% of statements
 ```
+
+安装Ingress-Nginx Controller
+
+```bash
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx --create-namespace
+```

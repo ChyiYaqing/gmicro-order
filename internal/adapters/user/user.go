@@ -1,11 +1,11 @@
-package payment
+package user
 
 import (
 	"context"
 	"time"
 
 	"github.com/chyiyaqing/gmicro-order/internal/application/core/domain"
-	"github.com/chyiyaqing/gmicro-proto/golang/payment"
+	"github.com/chyiyaqing/gmicro-proto/golang/user"
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
@@ -14,21 +14,16 @@ import (
 )
 
 type Adapter struct {
-	payment payment.PaymentClient
+	user user.UserClient
 }
 
-func NewAdapter(paymentServiceUrl string) (*Adapter, error) {
-	// tlsCredentials, tlsCredentialsErr := cert.GetTlsCredentials()
-	// _, tlsCredentialsErr := cert.GetTlsCredentials()
-	// if tlsCredentialsErr != nil {
-	// 	return nil, tlsCredentialsErr
-	// }
+func NewAdapter(userServiceUrl string) (*Adapter, error) {
 	var opts []grpc.DialOption
 	opts = append(opts,
-		// grpc.WithTransportCredentials(tlsCredentials),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithUnaryInterceptor(
 			grpc_retry.UnaryClientInterceptor(
+
 				grpc_retry.WithCodes(codes.Unavailable, codes.ResourceExhausted),
 				grpc_retry.WithMax(5),
 				grpc_retry.WithBackoff(grpc_retry.BackoffLinear(time.Second)),
@@ -36,19 +31,26 @@ func NewAdapter(paymentServiceUrl string) (*Adapter, error) {
 		),
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
 	)
-	conn, err := grpc.NewClient(paymentServiceUrl, opts...)
+	conn, err := grpc.NewClient(userServiceUrl, opts...)
 	if err != nil {
 		return nil, err
 	}
-	client := payment.NewPaymentClient(conn)
-	return &Adapter{payment: client}, nil
+	client := user.NewUserClient(conn)
+	return &Adapter{user: client}, nil
 }
 
-func (a *Adapter) Charge(ctx context.Context, order *domain.Order) error {
-	_, err := a.payment.Create(ctx, &payment.CreatePaymentRequest{
-		UserId:     order.CustomerID,
-		OrderId:    order.ID,
-		TotalPrice: order.TotalPrice(),
+func (a *Adapter) Get(ctx context.Context, user_id int64) (domain.User, error) {
+	getUserResponse, err := a.user.Get(ctx, &user.GetUserRequest{
+		UserId: user_id,
 	})
-	return err
+	if err != nil {
+		return domain.User{}, err
+	}
+	return domain.User{
+		ID:      getUserResponse.UserId,
+		Name:    getUserResponse.Name,
+		Email:   getUserResponse.Email,
+		Phone:   getUserResponse.Phone,
+		Address: getUserResponse.Address,
+	}, nil
 }
