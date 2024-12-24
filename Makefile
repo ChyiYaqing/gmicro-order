@@ -3,14 +3,15 @@
 GIT_TAG := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "0.0.1")
 VERSION := $(GIT_TAG)-$(shell git rev-parse --short HEAD)
 USERNAME := chyiyaqing
+SERVICE_NAME := order
 
 build:
-	docker build -t order:latest .
+	docker build -t $(SERVICE_NAME):latest .
 
 tag: build
-	docker tag order:latest $(USERNAME)/order:v$(VERSION)
+	docker tag $(SERVICE_NAME):latest $(USERNAME)/$(SERVICE_NAME):v$(VERSION)
 
 push: tag
-	docker push $(USERNAME)/order:v$(VERSION)
+	docker push $(USERNAME)/$(SERVICE_NAME):v$(VERSION)
 
 all: push
