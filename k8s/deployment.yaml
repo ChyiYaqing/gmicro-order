@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: order
-          image: chyiyaqing/order:v0.0.5
+          image: chyiyaqing/order:v0.0.1-eae0a9c
           ports:
             - containerPort: 8080
           env:
@@ -24,6 +24,10 @@ spec:
               value: "8080"
             - name: PAYMENT_SERVICE_URL
               value: "payment:8180"
+            - name: SHIPPING_SERVICE_URL
+              value: "shipping:8280"
+            - name: USER_SERVICE_URL
+              value: "user:8380"
             - name: SQLITE_DB
               value: "/data/sqlite.db"
             - name: TZ
