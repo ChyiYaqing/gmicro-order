@@ -32,7 +32,7 @@ func GetUserServiceUrl() string {
 }
 
 func GetShippingServiceUrl() string {
-	return getEnvironmentValue("USER_SERVICE_URL")
+	return getEnvironmentValue("SHIPPING_SERVICE_URL")
 }
 
 func getEnvironmentValue(key string) string {
